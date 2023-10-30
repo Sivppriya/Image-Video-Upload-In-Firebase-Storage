@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:padding="16dp"
+    tools:context=".db.UploadVideoRoom">
+
+    <ImageButton
+        android:id="@+id/videoUploadButton"
+        android:layout_width="wrap_content"
+        android:layout_height="250dp"
+        android:src="@drawable/videoresize"
+        android:layout_marginTop="10dp"
+        android:layout_marginStart="50dp"
+        android:contentDescription="Upload Video Button" />
+
+
+    <Button
+        android:id="@+id/chooseVideo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="130dp"
+        android:layout_marginTop="20dp"
+        android:text="@string/Upload_Video"
+        android:textSize="15sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/videoUploadButton" />
+
+
+
+</LinearLayout>

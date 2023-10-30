@@ -1,0 +1,86 @@
+package com.example.imagevideo.db
+
+import android.os.Bundle
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import androidx.fragment.app.Fragment
+import com.example.imagevideo.R
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.DelicateCoroutinesApi
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
+import java.util.UUID
+import kotlin.coroutines.CoroutineContext
+
+class  : Fragment(), CoroutineScope {
+    private lateinit var job: Job
+    private lateinit var appDatabase: AppDatabase
+
+    override val coroutineContext: CoroutineContext
+        get() = Dispatchers.Main + job
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        job = Job()
+        appDatabase = AppDatabase.getDatabase(requireContext())
+    }
+
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        val view = inflater.inflate(R.layout.fragment_room, container, false)
+
+        // Set the initial fragments to be displayed
+        childFragmentManager.beginTransaction()
+            .replace(R.id.imageFragmentContainer, UploadImageRoom())
+            .replace(R.id.videoFragmentContainer, UploadVideoRoom())
+            .commit()
+
+        // Call the upload functions when needed
+        uploadImage()
+        uploadVideo()
+
+        return view
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        job.cancel()
+    }
+
+    @OptIn(DelicateCoroutinesApi::class)
+    private fun uploadImage() {
+        // Generate a unique identifier for the image
+        val imageId = UUID.randomUUID().toString()
+
+        // Create an instance of ImageEntity with a unique image URL
+        val imageUrl = "https://example.com/images/$imageId.jpg"
+        val image = ImageEntity(imageUrl = imageUrl)
+
+        // Insert the image into the database using Kotlin coroutines
+        GlobalScope.launch {
+            appDatabase.imageDao().insertImage(listOf(image))
+        }
+    }
+
+    @OptIn(DelicateCoroutinesApi::class)
+    private fun uploadVideo() {
+        // Generate a unique identifier for the video
+        val videoId = UUID.randomUUID().toString()
+
+        // Create an instance of VideoEntity with a unique video URL
+        val videoUrl = "https://example.com/videos/$videoId.mp4"
+        val video = VideoEntity(videoUrl = videoUrl)
+
+        // Insert the video into th e database using Kotlin coroutines
+        GlobalScope.launch {
+            appDatabase.videoDao().insertVideo(video)
+        }
+    }
+}
+
+
